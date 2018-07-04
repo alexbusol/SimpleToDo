@@ -9,7 +9,7 @@
 import Foundation
 
 
-class ItemClass {
+class ItemClass: Encodable, Decodable { //encodable allows the class to convert itself into a plist. all properties have to be standard datatypes in order for it to work.
     var title : String = "" //stores the text of the ToDo
     var isDone : Bool = false
 }

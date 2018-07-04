@@ -11,11 +11,14 @@ import UIKit
 class TBviewController: UITableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
 
     var itemArray = [ItemClass]() //array of objects of ItemClass
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist") //creates our own plist at the app's location.
     
-    let defaults = UserDefaults.standard
+    //let defaults = UserDefaults.standard - cant user with custom datatypes
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+       
         
         let newItem = ItemClass()
         newItem.title = "Find Mike"
@@ -29,11 +32,16 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         newItem3.title = "Find Mike"
         itemArray.append(newItem3)
         
+        //USER DEFAULTS rejects custom data types.
+        //need to think of anyther way of storing data on the device.
         
-        if let items = defaults.array(forKey: "ToDoListArray") as? [ItemClass] { //make sure that the storage instance exists
-            itemArray = items //when the app is done loading, we retrieve the information from the previous session
-        }
+        
+//        if let items = defaults.array(forKey: "ToDoListArray") as? [ItemClass] { //make sure that the storage instance exists
+//            itemArray = items //when the app is done loading, we retrieve the information from the previous session
+//        }
         // Do any additional setup after loading the view, typically from a nib.
+        
+        loadData()
     }
 
     //MARK - Create TableView Data source
@@ -64,6 +72,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         print(itemArray[indexPath.row])
         
         itemArray[indexPath.row].isDone = !itemArray[indexPath.row].isDone //toggles between true and false every time the table cell is pressed
+        saveData()
         
         //-------------NO LONGER USED BECAUSE WE ARE USING CUSTOM DATATYPE NOW-----------------
         /*
@@ -74,7 +83,6 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         }
         
         */
-        tableView.reloadData() //making sure that the changes are reflected on the cells
         tableView.deselectRow(at: indexPath, animated: true) //makes the cells flash gray and then go back to white after being clicked.
         //at this point, we already have a very simple toDo app.
     }
@@ -94,9 +102,9 @@ class TBviewController: UITableViewController { //change the subclass to uitable
             tempItem.title = textField.text!
             self.itemArray.append(tempItem) //text property of the text field is never going to be nil.
             
-            self.defaults.set(self.itemArray, forKey: "ToDoListArray") //saves the item in the persistance storage (UserDefaults)
+//            self.defaults.set(self.itemArray, forKey: "ToDoListArray") //saves the item in the persistance storage (UserDefaults) --no longer works with custom datatypess
             
-            self.tableView.reloadData() //refreshes the table view to include the new user-added item.
+            self.saveData()
         }
         
     
@@ -110,5 +118,31 @@ class TBviewController: UITableViewController { //change the subclass to uitable
             present(textAlert, animated:true, completion: nil)
             
         }
+   
+    func saveData() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath! )
+        } catch {
+            print("Error encoding item Array")
+        }
+        
+        tableView.reloadData() //refreshes the table view to include the new user-added item.
     }
+    
+    func loadData() {
+        do {
+            if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            try itemArray = decoder.decode([ItemClass].self, from: data)
+            }
+        } catch {
+            print("error decoding data")
+
+        }
+    }
+}
+
+
 
