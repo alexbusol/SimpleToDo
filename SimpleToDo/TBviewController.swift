@@ -12,13 +12,18 @@ class TBviewController: UITableViewController { //change the subclass to uitable
 
     var itemArray = ["Find Mike", "Buy Eggos", "Use superpowers"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String] { //make sure that the storage instance exists
+            itemArray = items //when the app is done loading, we retrieve the information from the previous session
+        }
         // Do any additional setup after loading the view, typically from a nib.
     }
 
     //MARK - Create TableView Data source
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int ) -> Int {
         return itemArray.count //will create as many cells in the table view as there are cells in the itemArray
     }
     
@@ -56,6 +61,9 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             print("success")
             self.itemArray.append(textField.text!) //text property of the text field is never going to be nil.
+            
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray") //saves the item in the persistance storage (UserDefaults)
+            
             self.tableView.reloadData() //refreshes the table view to include the new user-added item.
         }
         
