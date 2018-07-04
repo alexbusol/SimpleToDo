@@ -10,7 +10,7 @@ import UIKit
 
 class TBviewController: UITableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
 
-    let itemArray = ["Find Mike", "Buy Eggos", "Use superpowers"]
+    var itemArray = ["Find Mike", "Buy Eggos", "Use superpowers"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +45,30 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         //at this point, we already have a very simple toDo app.
     }
     
+    //MARK - create add new items functionality
+    //created IBaction from main.storyboard.
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        //want to show a popup with a text field where the user can write
+        //his reminder text
+        var textField = UITextField()
+        let textAlert = UIAlertController(title: "Add a new toDo item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            print("success")
+            self.itemArray.append(textField.text!) //text property of the text field is never going to be nil.
+            self.tableView.reloadData() //refreshes the table view to include the new user-added item.
+        }
+        
     
-}
+        //the alert will have a text field that the user can fill
+        textAlert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            textField = alertTextField //will hold the text that user has entered
+        }
+            
+            textAlert.addAction(action)
+            present(textAlert, animated:true, completion: nil)
+            
+        }
+    }
 
