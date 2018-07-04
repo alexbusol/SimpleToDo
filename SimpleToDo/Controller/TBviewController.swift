@@ -10,13 +10,27 @@ import UIKit
 
 class TBviewController: UITableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
 
-    var itemArray = ["Find Mike", "Buy Eggos", "Use superpowers"]
+    var itemArray = [ItemClass]() //array of objects of ItemClass
     
     let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let items = defaults.array(forKey: "ToDoListArray") as? [String] { //make sure that the storage instance exists
+        
+        let newItem = ItemClass()
+        newItem.title = "Find Mike"
+        itemArray.append(newItem)
+        
+        let newItem2 = ItemClass()
+        newItem2.title = "Find Mike"
+        itemArray.append(newItem2)
+        
+        let newItem3 = ItemClass()
+        newItem3.title = "Find Mike"
+        itemArray.append(newItem3)
+        
+        
+        if let items = defaults.array(forKey: "ToDoListArray") as? [ItemClass] { //make sure that the storage instance exists
             itemArray = items //when the app is done loading, we retrieve the information from the previous session
         }
         // Do any additional setup after loading the view, typically from a nib.
@@ -28,10 +42,19 @@ class TBviewController: UITableViewController { //change the subclass to uitable
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        let tempItem = itemArray[indexPath.row]
         
+        cell.textLabel?.text = tempItem.title
+        
+        if tempItem.isDone == true {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
+       
         return cell
     }
     
@@ -39,14 +62,20 @@ class TBviewController: UITableViewController { //change the subclass to uitable
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
+        
+        itemArray[indexPath.row].isDone = !itemArray[indexPath.row].isDone //toggles between true and false every time the table cell is pressed
+        
+        //-------------NO LONGER USED BECAUSE WE ARE USING CUSTOM DATATYPE NOW-----------------
+        /*
         if (tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark) { //points to a cell that is currently selected.
             tableView.cellForRow(at: indexPath)?.accessoryType = .none //removes the checkmark if the cell already has one.
         } else {
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark //adds a checkmark to the cell that was clicked
         }
+        
+        */
+        tableView.reloadData() //making sure that the changes are reflected on the cells
         tableView.deselectRow(at: indexPath, animated: true) //makes the cells flash gray and then go back to white after being clicked.
-        
-        
         //at this point, we already have a very simple toDo app.
     }
     
@@ -60,7 +89,10 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             print("success")
-            self.itemArray.append(textField.text!) //text property of the text field is never going to be nil.
+            
+            let tempItem = ItemClass()
+            tempItem.title = textField.text!
+            self.itemArray.append(tempItem) //text property of the text field is never going to be nil.
             
             self.defaults.set(self.itemArray, forKey: "ToDoListArray") //saves the item in the persistance storage (UserDefaults)
             
