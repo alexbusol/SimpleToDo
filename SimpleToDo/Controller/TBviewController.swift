@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TBviewController: UITableViewController, UISearchBarDelegate { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
+class TBviewController: UITableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //getting the context from the app delegate.
     var itemArray = [Item]() //array of objects of Item Entities in Core Data
@@ -176,11 +176,45 @@ class TBviewController: UITableViewController, UISearchBarDelegate { //change th
     
     }
     //ENABLING SEARCH BAR FUNCTIONALITY.
-    /*
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        <#code#>
-    }*/
+    
     
 }
 
-
+extension TBviewController: UISearchBarDelegate { //can extend the class's functionality this wayinstead of adding the delegate directly to the class
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        print(searchBar.text) //prints out the text that the user enters in the search bar.
+        
+        request.predicate  = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) //the string means to look for items whose titles contain searchBar.text!
+        //cd makes the search bar insensitive to case and diacrytics
+        
+        
+        //SORT THE DATA WE GET BACK
+        
+        let sortDescriptor = NSSortDescriptor(key: "title", ascending: true) //sort in alphabetical order
+        request.sortDescriptors = [sortDescriptor] //expects an array of sort descriptors, so we are passing an array of one
+        
+        
+        //fetch the search results
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("error fetching data from the search results \(error)")
+        }
+        tableView.reloadData()
+        
+    }
+    
+    //when the text changed and went down to 0
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadData()
+            tableView.reloadData()
+            
+            DispatchQueue.main.async { //select the main thread of exectuion. forces the code inside to run in the foreground.
+                searchBar.resignFirstResponder() //deselects the search bar and dismisses the keyboard.
+            }
+            
+        }
+    }
+}
