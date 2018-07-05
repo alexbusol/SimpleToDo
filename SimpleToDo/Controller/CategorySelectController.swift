@@ -21,7 +21,7 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 80
+        //tableView.rowHeight = 80
         loadData() //load all the existing categories when the app loads
 
     }

@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TBviewController: UITableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
+class TBviewController: SwipeTableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
 
     var itemArray : Results<Item>? //collection of results
     let realm = try! Realm()
@@ -42,7 +42,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let tempItem = itemArray?[indexPath.row] {
         
@@ -56,7 +56,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         } else {
             cell.textLabel?.text = "No Items Added Yet :("
         }
-       
+ 
         return cell
     }
     
@@ -147,6 +147,18 @@ class TBviewController: UITableViewController { //change the subclass to uitable
 
         tableView.reloadData()
 
+    }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = itemArray?[indexPath.row] {
+            do {
+                try realm.write {
+                    realm.delete(item)
+                }
+            } catch {
+                print("Error deleting cell")
+            }
+        }
     }
 
     

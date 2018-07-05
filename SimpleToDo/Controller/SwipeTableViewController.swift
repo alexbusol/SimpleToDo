@@ -13,6 +13,7 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     var cell: UITableViewCell?
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 80
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
