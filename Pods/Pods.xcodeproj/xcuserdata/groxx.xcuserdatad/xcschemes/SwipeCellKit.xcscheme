@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "62C4AA33DF6CB3ECC70B12FD67014FB7"
+               BlueprintIdentifier = "540245CCF1F3E30D257F71731DA4ABF1"
                BlueprintName = "SwipeCellKit"
                ReferencedContainer = "container:Pods.xcodeproj"
                BuildableName = "SwipeCellKit.framework">

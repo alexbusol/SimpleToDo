@@ -8,4 +8,5 @@ target 'SimpleToDo' do
   # Pods for SimpleToDo
 pod 'RealmSwift'
 pod 'SwipeCellKit'
+pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
 end
