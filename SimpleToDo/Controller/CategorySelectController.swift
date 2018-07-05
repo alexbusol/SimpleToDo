@@ -10,7 +10,8 @@ import UIKit
 //import CoreData
 import RealmSwift
 
-class CategorySelectController: UITableViewController {
+
+class CategorySelectController: SwipeTableViewController { //adopt the required protocol
 
     
     let realm = try! Realm()
@@ -20,6 +21,7 @@ class CategorySelectController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 80
         loadData() //load all the existing categories when the app loads
 
     }
@@ -59,11 +61,14 @@ class CategorySelectController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-    
+        let cell = super.tableView(tableView, cellForRowAt: indexPath) //taps into the function from the superclass
+        
+        //basically, the cell returned from the swipetableviewcontroller gets placed here.
+        
         cell.textLabel?.text = categoryArray?[indexPath.row].categoryName ?? "No Categories Added Yet"
         
         return cell //now the cell will be rendered on screen
+        
     }
     
     //MARK: - TableView Delegate Methods
@@ -107,6 +112,9 @@ class CategorySelectController: UITableViewController {
     }
     
 }
+
+
+
 /* ----------------------------- OPTIONAL SEACH FUNCTIONALITY----. needs adjusting for REALM
     extension CategorySelectController: UISearchBarDelegate { //can extend the class's functionality this wayinstead of adding the delegate directly to the class
         
