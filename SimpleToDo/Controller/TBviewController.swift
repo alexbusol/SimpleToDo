@@ -13,14 +13,14 @@ class TBviewController: UITableViewController { //change the subclass to uitable
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //getting the context from the app delegate.
     var itemArray = [Item]() //array of objects of Item Entities in Core Data
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist") //creates our own plist at the app's location.
+    //let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist") //creates our own plist at the app's location. -- no longer needed
     
     //let defaults = UserDefaults.standard - cant user with custom datatypes
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         //USER DEFAULTS rejects custom data types.
         //need to think of anyther way of storing data on the device.
@@ -31,7 +31,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
 //        }
         // Do any additional setup after loading the view, typically from a nib.
         
-    //    loadData()
+        loadData()
     }
 
     //MARK - Create TableView Data source
@@ -90,10 +90,12 @@ class TBviewController: UITableViewController { //change the subclass to uitable
             
            //let tempItem = ItemClass() - no longer used
             
-            
+            //------------------ CREATING AND INITIALISING A NEW TODO ITEM --------------------
             let tempItem = Item(context: self.context)
             tempItem.title = textField.text!
-            self.itemArray.append(tempItem) //text property of the text field is never going to be nil.
+            tempItem.isDone = false
+            
+            self.itemArray.append(tempItem) //ADDING THE ITEM TO THE EXISTING ARRAY OF ITEM ENTITIES
             
 //            self.defaults.set(self.itemArray, forKey: "ToDoListArray") //saves the item in the persistance storage (UserDefaults) --no longer works with custom datatypess
             
@@ -134,6 +136,18 @@ class TBviewController: UITableViewController { //change the subclass to uitable
 //
 //        }
 //    }
+    // now the app will pull items form the CoreData database when it loads
+    func loadData() {
+        let request : NSFetchRequest<Item> = Item.fetchRequest() //have to specify the datatype of output here
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("error fetching data from context \(error)")
+        }
+        
+        
+    
+    }
 }
 
 
