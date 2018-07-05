@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import CoreData
 
 class TBviewController: UITableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
-
-    var itemArray = [ItemClass]() //array of objects of ItemClass
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //getting the context from the app delegate.
+    var itemArray = [Item]() //array of objects of Item Entities in Core Data
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist") //creates our own plist at the app's location.
     
     //let defaults = UserDefaults.standard - cant user with custom datatypes
@@ -18,19 +20,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
     override func viewDidLoad() {
         super.viewDidLoad()
         
-       
-        
-        let newItem = ItemClass()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
-        
-        let newItem2 = ItemClass()
-        newItem2.title = "Find Mike"
-        itemArray.append(newItem2)
-        
-        let newItem3 = ItemClass()
-        newItem3.title = "Find Mike"
-        itemArray.append(newItem3)
+
         
         //USER DEFAULTS rejects custom data types.
         //need to think of anyther way of storing data on the device.
@@ -41,7 +31,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
 //        }
         // Do any additional setup after loading the view, typically from a nib.
         
-        loadData()
+    //    loadData()
     }
 
     //MARK - Create TableView Data source
@@ -98,7 +88,10 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             print("success")
             
-            let tempItem = ItemClass()
+           //let tempItem = ItemClass() - no longer used
+            
+            
+            let tempItem = Item(context: self.context)
             tempItem.title = textField.text!
             self.itemArray.append(tempItem) //text property of the text field is never going to be nil.
             
@@ -120,29 +113,27 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         }
    
     func saveData() {
-        let encoder = PropertyListEncoder()
+        //let encoder = PropertyListEncoder() - no longer used
         do {
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath! )
+           try context.save()
         } catch {
-            print("Error encoding item Array")
+            print("Error saving Context \(error)")
         }
         
         tableView.reloadData() //refreshes the table view to include the new user-added item.
     }
     
-    func loadData() {
-        do {
-            if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            try itemArray = decoder.decode([ItemClass].self, from: data)
-            }
-        } catch {
-            print("error decoding data")
-
-        }
-    }
+//    func loadData() {
+//        do {
+//            if let data = try? Data(contentsOf: dataFilePath!) {
+//          //let decoder = PropertyListDecoder() - no longer used
+//            try itemArray = decoder.decode([ItemClass].self, from: data)
+//            }
+//        } catch {
+//            print("error decoding data")
+//
+//        }
+//    }
 }
-
 
 

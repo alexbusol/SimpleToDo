@@ -13,6 +13,7 @@
 		E64A3D1C20ECFEE900227D0C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E64A3D1B20ECFEE900227D0C /* Assets.xcassets */; };
 		E64A3D1F20ECFEE900227D0C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E64A3D1D20ECFEE900227D0C /* LaunchScreen.storyboard */; };
 		E64A3D2720ED308600227D0C /* ItemClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64A3D2620ED308600227D0C /* ItemClass.swift */; };
+		E689A14920EE111A00D6102A /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E689A14720EE111A00D6102A /* DataModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		E64A3D1E20ECFEE900227D0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E64A3D2020ECFEE900227D0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E64A3D2620ED308600227D0C /* ItemClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemClass.swift; sourceTree = "<group>"; };
+		E689A14820EE111A00D6102A /* Data Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Data Model.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 		E64A3D2820ED308B00227D0C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E689A14720EE111A00D6102A /* DataModel.xcdatamodeld */,
 				E64A3D2620ED308600227D0C /* ItemClass.swift */,
 			);
 			path = Model;
@@ -172,6 +175,7 @@
 			files = (
 				E64A3D1720ECFEE700227D0C /* TBviewController.swift in Sources */,
 				E64A3D2720ED308600227D0C /* ItemClass.swift in Sources */,
+				E689A14920EE111A00D6102A /* DataModel.xcdatamodeld in Sources */,
 				E64A3D1520ECFEE700227D0C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -370,6 +374,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E689A14720EE111A00D6102A /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E689A14820EE111A00D6102A /* Data Model.xcdatamodel */,
+			);
+			currentVersion = E689A14820EE111A00D6102A /* Data Model.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = E64A3D0920ECFEE700227D0C /* Project object */;
 }

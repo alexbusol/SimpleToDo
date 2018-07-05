@@ -6,6 +6,12 @@
 //  Copyright © 2018 Alex Busol. All rights reserved.
 //
 
+
+
+
+
+
+/*-------------------------NO LONGER USED, REPLACED WITH CORE DATA DATAMODEL -----------------------------------------
 import Foundation
 
 
@@ -13,3 +19,4 @@ class ItemClass: Encodable, Decodable { //encodable allows the class to convert 
     var title : String = "" //stores the text of the ToDo
     var isDone : Bool = false
 }
+*/
