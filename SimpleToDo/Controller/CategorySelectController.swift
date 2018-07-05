@@ -9,6 +9,7 @@
 import UIKit
 //import CoreData
 import RealmSwift
+import ChameleonFramework
 
 
 class CategorySelectController: SwipeTableViewController { //adopt the required protocol
@@ -21,6 +22,7 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.separatorStyle = .none
         //tableView.rowHeight = 80
         loadData() //load all the existing categories when the app loads
 
@@ -37,6 +39,7 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
             //------------------ CREATING AND INITIALISING A NEW CATEGORY --------------------
             let tempCategory = Category()
             tempCategory.categoryName = textField.text!
+            tempCategory.categoryColor = UIColor.randomFlat.hexValue()
             
             self.saveData(category: tempCategory)
         }
@@ -59,17 +62,27 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
         return categoryArray?.count  ?? 1  //nil coalescing operator. 1 is returned is caregoryArray is nil.
     }
     
+    
+    
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = super.tableView(tableView, cellForRowAt: indexPath) //taps into the function from the superclass
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)//taps into the function from the superclass
         
         //basically, the cell returned from the swipetableviewcontroller gets placed here.
         
         cell.textLabel?.text = categoryArray?[indexPath.row].categoryName ?? "No Categories Added Yet"
         
+       
+        cell.backgroundColor = UIColor(hexString: categoryArray?[indexPath.row].categoryColor ?? "1D9BF6")
+        
         return cell //now the cell will be rendered on screen
         
     }
+    
+    
+    
     
     //MARK: - TableView Delegate Methods
     
