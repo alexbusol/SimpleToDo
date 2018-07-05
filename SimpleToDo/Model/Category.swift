@@ -9,7 +9,10 @@
 import Foundation
 import RealmSwift
 
-class Category: Object {
-    @objc dynamic var categoryName : Strying = ""
-    //@objc dynamic 
+class Category: Object { //need to subclass object to be able to save data using Realm
+    @objc dynamic var categoryName : String = "" //dynamic var - monitors for changes during runtime
+    
+    let items = List<Item>() //defines the forward relationship from coreData. specifies that each category can have a
+    //number of items
+
 }

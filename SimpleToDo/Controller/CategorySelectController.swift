@@ -7,18 +7,20 @@
 //
 
 import UIKit
-import CoreData
+//import CoreData
+import RealmSwift
 
 class CategorySelectController: UITableViewController {
 
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var categoryArray = [Category]() //create an array of category entities
+    
+    let realm = try! Realm()
+    var categoryArray : Results<Category>? //collection of results
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
+        loadData() //load all the existing categories when the app loads
 
     }
 
@@ -31,11 +33,10 @@ class CategorySelectController: UITableViewController {
             print("success adding category")
             
             //------------------ CREATING AND INITIALISING A NEW CATEGORY --------------------
-            let tempCategory = Category(context: self.context)
+            let tempCategory = Category()
             tempCategory.categoryName = textField.text!
             
-            self.categoryArray.append(tempCategory) //ADDING THE CATEGORY TO THE EXISTING ARRAY OF CATEGORY ENTITIES
-            self.saveData()
+            self.saveData(category: tempCategory)
         }
         
         textAlert.addAction(action)
@@ -53,27 +54,26 @@ class CategorySelectController: UITableViewController {
     //MARK: - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categoryArray?.count  ?? 1  //nil coalescing operator. 1 is returned is caregoryArray is nil.
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        
-        let categoryToInsert = categoryArray[indexPath.row]
-        cell.textLabel?.text = categoryToInsert.categoryName
+    
+        cell.textLabel?.text = categoryArray?[indexPath.row].categoryName ?? "No Categories Added Yet"
         
         return cell //now the cell will be rendered on screen
     }
     
     //MARK: - TableView Delegate Methods
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) { //runs when a cell is clicked
         //tableView.deselectRow(at: indexPath, animated: true)
         
         //need to trigger the segue to take the user to the items in the category
         
-        performSegue(withIdentifier: "goToItemView", sender: self)
+        performSegue(withIdentifier: "goToItemView", sender: self) 
         
     }
     
@@ -81,15 +81,17 @@ class CategorySelectController: UITableViewController {
         let destinationViewController = segue.destination as! TBviewController
         
         if let indexPath =  tableView.indexPathForSelectedRow {
-            destinationViewController.selectedCategory = categoryArray[indexPath.row]
+            destinationViewController.selectedCategory = categoryArray?[indexPath.row]
         }
     }
     
     //MARK: - Data manipulation methods  (save data and load data)
     
-    func saveData() {
+    func saveData(category: Category) {
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             print("Error saving Context in category\(error)")
         }
@@ -98,18 +100,14 @@ class CategorySelectController: UITableViewController {
     }
     
     func loadData() {
-        let request : NSFetchRequest<Category> = Category.fetchRequest() //have to specify the datatype of output here
-        do {
-            categoryArray = try context.fetch(request)
-        } catch {
-            print("error fetching data from context in category \(error)")
-        }
+        
+        categoryArray = realm.objects(Category.self)
         
         tableView.reloadData()
     }
     
 }
-/*
+/* ----------------------------- OPTIONAL SEACH FUNCTIONALITY----. needs adjusting for REALM
     extension CategorySelectController: UISearchBarDelegate { //can extend the class's functionality this wayinstead of adding the delegate directly to the class
         
         

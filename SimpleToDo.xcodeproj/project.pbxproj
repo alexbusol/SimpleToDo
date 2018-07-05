@@ -100,8 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				E64A3D2620ED308600227D0C /* ItemClass.swift */,
-				E666601020EE7E64000E65B7 /* Item.swift */,
 				E666601220EE7E6C000E65B7 /* Category.swift */,
+				E666601020EE7E64000E65B7 /* Item.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
