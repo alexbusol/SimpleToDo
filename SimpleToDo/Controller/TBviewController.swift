@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TBviewController: UITableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
+class TBviewController: UITableViewController, UISearchBarDelegate { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //getting the context from the app delegate.
     var itemArray = [Item]() //array of objects of Item Entities in Core Data
@@ -21,6 +21,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         super.viewDidLoad()
         
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+
         
         //USER DEFAULTS rejects custom data types.
         //need to think of anyther way of storing data on the device.
@@ -61,6 +62,14 @@ class TBviewController: UITableViewController { //change the subclass to uitable
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
         
+        /* --remove the item when done.
+        context.delete(itemArray[indexPath.row]) //order matters. call this first before removing the item form the array.
+         
+        itemArray.remove(at: indexPath.row)
+        
+        saveData()
+        */
+        
         itemArray[indexPath.row].isDone = !itemArray[indexPath.row].isDone //toggles between true and false every time the table cell is pressed
         saveData()
         
@@ -76,6 +85,24 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         tableView.deselectRow(at: indexPath, animated: true) //makes the cells flash gray and then go back to white after being clicked.
         //at this point, we already have a very simple toDo app.
     }
+    
+    
+    
+    //----------------------enabling SLIDE TO DELETE------------------------
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+        
+            context.delete(itemArray[indexPath.row]) //order matters. call this first before removing the item form the array.
+            itemArray.remove(at: indexPath.row)
+            
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            // saveData() - not needed because deleteRows already reorders the tableView
+
+        }
+    }
+    
+    
     
     //MARK - create add new items functionality
     //created IBaction from main.storyboard.
@@ -148,6 +175,12 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         
     
     }
+    //ENABLING SEARCH BAR FUNCTIONALITY.
+    /*
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        <#code#>
+    }*/
+    
 }
 
 
