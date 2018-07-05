@@ -11,9 +11,17 @@ import CoreData
 
 class TBviewController: UITableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //getting the context from the app delegate.
+   
     var itemArray = [Item]() //array of objects of Item Entities in Core Data
     //let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist") //creates our own plist at the app's location. -- no longer needed
+    
+    var selectedCategory : Category? {
+        didSet{ //going to happen as soon as the category item gets set with value
+            loadData()
+        }
+    }
+    
+     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //getting the context from the app delegate.
     
     //let defaults = UserDefaults.standard - cant user with custom datatypes
     
@@ -32,7 +40,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
 //        }
         // Do any additional setup after loading the view, typically from a nib.
         
-        loadData()
+       // loadData()
     }
 
     //MARK - Create TableView Data source
@@ -82,13 +90,15 @@ class TBviewController: UITableViewController { //change the subclass to uitable
         }
         
         */
+        
+        
         tableView.deselectRow(at: indexPath, animated: true) //makes the cells flash gray and then go back to white after being clicked.
         //at this point, we already have a very simple toDo app.
     }
     
     
     
-    //----------------------enabling SLIDE TO DELETE------------------------
+    //MARK: ----------------------enabling SLIDE TO DELETE------------------------
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
         
@@ -121,6 +131,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
             let tempItem = Item(context: self.context)
             tempItem.title = textField.text!
             tempItem.isDone = false
+            tempItem.parentItem = self.selectedCategory //adds a parent category to the item we are creating.
             
             self.itemArray.append(tempItem) //ADDING THE ITEM TO THE EXISTING ARRAY OF ITEM ENTITIES
             
@@ -149,7 +160,7 @@ class TBviewController: UITableViewController { //change the subclass to uitable
             print("Error saving Context \(error)")
         }
         
-        tableView.reloadData() //refreshes the table view to include the new user-added item.
+        self.tableView.reloadData() //refreshes the table view to include the new user-added item.
     }
     
 //    func loadData() {
@@ -164,28 +175,44 @@ class TBviewController: UITableViewController { //change the subclass to uitable
 //        }
 //    }
     // now the app will pull items form the CoreData database when it loads
-    func loadData() {
-        let request : NSFetchRequest<Item> = Item.fetchRequest() //have to specify the datatype of output here
+   
+    func loadData(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
+        
+        let categoryPredicate = NSPredicate(format: "parentItem.categoryName MATCHES %@", selectedCategory!.categoryName!)
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
+        
         do {
             itemArray = try context.fetch(request)
         } catch {
             print("error fetching data from context \(error)")
         }
         
+        tableView.reloadData()
         
-    
     }
-    //ENABLING SEARCH BAR FUNCTIONALITY.
+
     
     
 }
 
+
+//----------------------------- ENABLING SEARCH BAR FUNCTIONALITY ----------------------------
+
+
 extension TBviewController: UISearchBarDelegate { //can extend the class's functionality this wayinstead of adding the delegate directly to the class
+    
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
-        print(searchBar.text) //prints out the text that the user enters in the search bar.
         
-        request.predicate  = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) //the string means to look for items whose titles contain searchBar.text!
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        //print(searchBar.text) //prints out the text that the user enters in the search bar.
+        
+        let predicate  = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) //the string means to look for items whose titles contain searchBar.text!
         //cd makes the search bar insensitive to case and diacrytics
         
         
@@ -194,7 +221,7 @@ extension TBviewController: UISearchBarDelegate { //can extend the class's funct
         let sortDescriptor = NSSortDescriptor(key: "title", ascending: true) //sort in alphabetical order
         request.sortDescriptors = [sortDescriptor] //expects an array of sort descriptors, so we are passing an array of one
         
-        
+        /*
         //fetch the search results
         do {
             itemArray = try context.fetch(request)
@@ -202,6 +229,10 @@ extension TBviewController: UISearchBarDelegate { //can extend the class's funct
             print("error fetching data from the search results \(error)")
         }
         tableView.reloadData()
+        */
+        
+        loadData(with: request, predicate: predicate)
+        
         
     }
     
@@ -209,7 +240,6 @@ extension TBviewController: UISearchBarDelegate { //can extend the class's funct
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             loadData()
-            tableView.reloadData()
             
             DispatchQueue.main.async { //select the main thread of exectuion. forces the code inside to run in the foreground.
                 searchBar.resignFirstResponder() //deselects the search bar and dismisses the keyboard.

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E620969120EE540D00EA345A /* CategorySelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E620969020EE540D00EA345A /* CategorySelectController.swift */; };
 		E64A3D1520ECFEE700227D0C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64A3D1420ECFEE700227D0C /* AppDelegate.swift */; };
 		E64A3D1720ECFEE700227D0C /* TBviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64A3D1620ECFEE700227D0C /* TBviewController.swift */; };
 		E64A3D1A20ECFEE700227D0C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E64A3D1820ECFEE700227D0C /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E620969020EE540D00EA345A /* CategorySelectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectController.swift; sourceTree = "<group>"; };
 		E64A3D1120ECFEE700227D0C /* SimpleToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64A3D1420ECFEE700227D0C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E64A3D1620ECFEE700227D0C /* TBviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBviewController.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 		E64A3D2920ED309B00227D0C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				E620969020EE540D00EA345A /* CategorySelectController.swift */,
 				E64A3D1620ECFEE700227D0C /* TBviewController.swift */,
 			);
 			path = Controller;
@@ -173,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E620969120EE540D00EA345A /* CategorySelectController.swift in Sources */,
 				E64A3D1720ECFEE700227D0C /* TBviewController.swift in Sources */,
 				E64A3D2720ED308600227D0C /* ItemClass.swift in Sources */,
 				E689A14920EE111A00D6102A /* DataModel.xcdatamodeld in Sources */,
