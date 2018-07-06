@@ -34,7 +34,6 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Simple To-Do" id="3fC-h2-uGa">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="mg5-Ht-MN4">
-                            <color key="tintColor" red="0.86283749340000004" green="0.16202919869999999" blue="0.3885380403" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="Zno-Qu-nef" id="Yp7-dh-THv"/>
                             </connections>
@@ -48,7 +47,7 @@
             </objects>
             <point key="canvasLocation" x="897" y="140"/>
         </scene>
-        <!--Current ToDos-->
+        <!--Current To-Dos-->
         <scene sceneID="XI4-0e-Kou">
             <objects>
                 <tableViewController id="z3R-2s-EHX" customClass="TBviewController" customModule="SimpleToDo" customModuleProvider="target" sceneMemberID="viewController">
@@ -79,14 +78,16 @@
                             <outlet property="delegate" destination="z3R-2s-EHX" id="MDg-ac-hbL"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Current ToDos" id="AH6-nj-FIM">
+                    <navigationItem key="navigationItem" title="Current To-Dos" id="AH6-nj-FIM">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="vRT-9K-ALv">
-                            <color key="tintColor" red="0.76913997021363811" green="0.16849314994081668" blue="0.28964686065215806" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="z3R-2s-EHX" id="VT2-SD-B3p"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="pie-5m-cQd" id="O2x-b4-xH7"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2A7-M1-vSr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -97,8 +98,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7IO-wd-G98" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ifa-J1-EGg">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Ifa-J1-EGg">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.0" green="0.83656512066838173" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </navigationBar>

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-//import CoreData
 import RealmSwift
 import ChameleonFramework
 
@@ -23,7 +22,6 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.separatorStyle = .none
-        //tableView.rowHeight = 80
         loadData() //load all the existing categories when the app loads
 
     }
@@ -47,7 +45,7 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
         textAlert.addAction(action)
         //the alert will have a text field that the user can fill
         textAlert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Add a new category"
+            alertTextField.placeholder = "Add New Category"
             textField = alertTextField //will hold the text that user has entered
         }
         
@@ -76,6 +74,7 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
         
        
         cell.backgroundColor = UIColor(hexString: categoryArray?[indexPath.row].categoryColor ?? "1D9BF6")
+        cell.textLabel?.textColor = ContrastColorOf(UIColor(hexString: (categoryArray?[indexPath.row].categoryColor)!)!, returnFlat: true)
         
         return cell //now the cell will be rendered on screen
         
@@ -111,7 +110,7 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
                 realm.add(category)
             }
         } catch {
-            print("Error saving Context in category\(error)")
+            print("Error saving data in category\(error)")
         }
         
         tableView.reloadData() //refreshes the table view to include the new user-added category.
@@ -132,7 +131,7 @@ class CategorySelectController: SwipeTableViewController { //adopt the required 
                                     self.realm.delete(categoryToDelete)
                                 }
                             } catch {
-                                print("error deleting an item")
+                                print("error deleting category cell")
                             }
             
                         }

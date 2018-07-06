@@ -11,9 +11,14 @@ import RealmSwift
 import ChameleonFramework
 
 class TBviewController: SwipeTableViewController { //change the subclass to uitableViewController to link it to the table viewC in the mainStoryboard.
-
+    
+    //MARK: - declaring required global variables
+    
     var itemArray : Results<Item>? //collection of results
     let realm = try! Realm()
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     
     var selectedCategory : Category? {
         didSet{ //going to happen as soon as the category item gets set with value
@@ -26,9 +31,20 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
         super.viewDidLoad()
         tableView.separatorStyle = .none
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
     }
 
-    
+    override func viewWillAppear(_ animated: Bool) { //gets called right before the view controller appears on the screen
+        
+        if let color = selectedCategory?.categoryColor {
+            title = selectedCategory!.categoryName
+            navigationController?.navigationBar.barTintColor = UIColor(hexString: color) //changing the navbar color
+            searchBar.barTintColor = UIColor(hexString: color) //changing the search bar background color
+            searchBar.placeholder = "Search for To-Dos"
+            navigationController?.navigationBar.tintColor = ContrastColorOf(UIColor(hexString: color)!, returnFlat: true) //adding contrast to navbar items
+            navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : ContrastColorOf(UIColor(hexString: color)!, returnFlat: true)] //adding contrast to navbar title
+        }
+    }
     
     
     
@@ -36,8 +52,6 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int ) -> Int {
         return itemArray?.count ?? 1 //will create as many cells in the table view as there are cells in the itemArray
     }
-    
-    
     
     
     
@@ -56,7 +70,7 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
             }
           
         
-        if tempItem.isDone == true {
+        if tempItem.isDone == true { //setting checkmarks depending on the value of isDone
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
@@ -78,7 +92,7 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
                     item.isDone = !item.isDone
                 }
             } catch {
-                print("error saving checkmark")
+                print("error setting isDone")
             }
             
         }
@@ -89,7 +103,9 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
        
     }
     
-    /* !!! --no longer used. will update this method later
+    /* !!! --no longer used. will update this method later --- UPDATED to use SwipeTableViewController superclass with SwipeCellKit
+     
+    
     
     //MARK: ----------------------enabling SLIDE TO DELETE------------------------
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -107,10 +123,10 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
     */
     
     
-    //MARK - create add new items functionality
+    //MARK: - create add new items functionality
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
-        let textAlert = UIAlertController(title: "Add a new toDo item", message: "", preferredStyle: .alert)
+        let textAlert = UIAlertController(title: "Add New To-Do Item", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             print("success")
@@ -141,7 +157,7 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
     
         //the alert will have a text field that the user can fill
         textAlert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Create new item"
+            alertTextField.placeholder = "Create New To-Do"
             textField = alertTextField //will hold the text that user has entered
         }
             
@@ -150,6 +166,7 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
             
         }
     
+    
     func loadData() {
         itemArray = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
 
@@ -157,7 +174,7 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
 
     }
     
-    override func updateModel(at indexPath: IndexPath) {
+    override func updateModel(at indexPath: IndexPath) { //overriding the function from the SwipeTableViewController
         if let item = itemArray?[indexPath.row] {
             do {
                 try realm.write {
@@ -181,7 +198,7 @@ extension TBviewController: UISearchBarDelegate { //can extend the class's funct
 
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-            itemArray = itemArray?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+            itemArray = itemArray?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true) //simple search with realm
         
         tableView.reloadData()
 

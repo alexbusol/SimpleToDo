@@ -10,10 +10,12 @@ import UIKit
 import SwipeCellKit
 
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
+    
     var cell: UITableViewCell?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 80
+        tableView.rowHeight = 80 //cetting the rowHeight for both the Category and the ToDo items
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -34,8 +36,7 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
 
             
         }
-        
-      
+
         // customize the action appearance
         deleteAction.image = UIImage(named: "DeleteIcon") //puts the image in front of the typical red background of delete
         
