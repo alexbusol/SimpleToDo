@@ -52,6 +52,7 @@ class TBviewController: SwipeTableViewController { //change the subclass to uita
             if let color = UIColor(hexString: selectedCategory!.categoryColor)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(itemArray!.count)) { //creating gradient for todo list items. only works if UIColor for hex string result is not nil.
                   cell.backgroundColor = color
                   cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true) //using the chameleon framework functionality to make the text stand out no matter the background color.
+                  cell.tintColor = ContrastColorOf(color, returnFlat: true) //made the checkmarks contrast as well.
             }
           
         
